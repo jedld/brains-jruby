@@ -19,11 +19,15 @@ module Brains
       @nn.randomizeWeights(min, max)
     end
 
-    def dump
+    def dump_weights
       @nn.dumpWeights.to_a.map(&:to_a)
     end
 
-    def optimize(test_cases, target_error = 0.01, is_batch = false)
+    def dump_biases
+      @nn.dumpWeights.to_a.map(&:to_a)
+    end
+
+    def optimize(test_cases, target_error = 0.01, max_epoch = 1_000_000_000, is_batch = false, &callback)
       inputs = []
       outputs = []
 
@@ -32,7 +36,7 @@ module Brains
         outputs << item[1].to_java(Java::double)
       end
 
-      @nn.optimize(java.util.ArrayList.new(inputs), java.util.ArrayList.new(outputs), target_error, is_batch)
+      @nn.optimize(java.util.ArrayList.new(inputs), java.util.ArrayList.new(outputs), target_error, max_epoch, is_batch, callback)
     end
 
     def feed(input)

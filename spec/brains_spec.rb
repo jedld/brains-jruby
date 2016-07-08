@@ -20,7 +20,9 @@ describe Brains do
       [ [0] , [Math.sin(0)] ],
     ]
     expect((brain.feed([0.6])[0] - Math.sin(0.6)).abs).to be > 0.1
-    brain.optimize(test_cases, 0.001, false)
+    brain.optimize(test_cases, 0.001) { |i, total_errors|
+      puts "#{i} -> #{total_errors}"
+    }
     expect((brain.feed([0.6])[0] - Math.sin(0.6)).abs).to be < 0.1
     expect(JSON.parse(brain.to_json).select { |k,v| ['n'].include? k}).to eq ({'n' => 20})
   end
