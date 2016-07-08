@@ -53,10 +53,6 @@ end
 nn = Brains::Net.new(4, 3, 7, { neurons_per_layer: 4 })
 nn.randomize_weights
 
-# nn.optimize(test_cases) do |i, error|
-#   puts "#{i} -> #{error}"
-# end
-
 prediction_success = -> (actual, ideal) {
   predicted = (0..2).max_by {|i| actual[i] }
   ideal[predicted] == 1
@@ -89,12 +85,12 @@ puts "Untrained classification success: #{success}, failure: #{failure} (classif
 puts "\nTraining the network...\n\n"
 
 t1 = Time.now
-nn.optimize(test_cases, 0.01, 1_000 ) { |i, error|
+result = nn.optimize(test_cases, 0.01, 1_000 ) { |i, error|
   puts "#{i} #{error}"
 }
 
 # puts result
-puts "\nDone training the network: #{(Time.now - t1).round(1)}s"
+puts "\nDone training the network: #{result[:iterations]} iterations, #{(result[:error] * 100).round(2)}% mse, #{(Time.now - t1).round(1)}s"
 
 
 puts "\nTesting the trained network..."

@@ -36,7 +36,8 @@ module Brains
         outputs << item[1].to_java(Java::double)
       end
 
-      @nn.optimize(java.util.ArrayList.new(inputs), java.util.ArrayList.new(outputs), target_error, max_epoch, is_batch, callback)
+      result = @nn.optimize(java.util.ArrayList.new(inputs), java.util.ArrayList.new(outputs), target_error, max_epoch, is_batch, callback)
+      { iterations: result.first, error: result.second }
     end
 
     def feed(input)
