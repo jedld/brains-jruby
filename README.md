@@ -93,11 +93,31 @@ Check if the network is trained. There are more advanced and proper techniques t
 a network is sufficiently trained, but this is beyond the scope of this example.
 
 ```ruby
+# test on untrained data
+test_data = [
+  [0.9, 0.9],
+  [0.9, 0.1],
+  [0.1, 0.9],
+  [0.1, 0.1]
+]
+
 results = test_data.collect { |item|
   nn.feed(item)
 }
 
 p results
+
+[[0.19717958808009528], [0.7983320405281495], [0.8386219299757574], [0.16609147896733775]]
+```
+
+Using the test data we can see the correlation and the neural network function now approximates
+the xor function with the desired error:
+
+```
+[0.9, 0.9] => [0.19717958808009528]
+[0.9, 0.1] => [0.7983320405281495]
+[0.1, 0.9] => [0.8386219299757574]
+[0.1, 0.1] => [0.16609147896733775]
 ```
 
 Saving brain state
