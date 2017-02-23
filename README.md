@@ -29,7 +29,7 @@ Or install it yourself as:
 
 * Customizable network parameters depending on requirements
 * Fast (A bit slower than FANN but significantly faster than a pure ruby implementation)
-* NN backend Java which allows for platform agnostic implementation
+* NN backend implementation in Java which allows for platform agnostic implementation
 
 ## Usage
 
