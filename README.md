@@ -46,19 +46,23 @@ nn.randomize_weights
 
 Consider that we want to train the neural network to handle XOR computations
 
+```
 A    B   A XOR B
 1    1      0
 1    0      1
 0    1      1
 0    0      0
+```
 
 First we build the training data. This is an array of arrays with each item
 in the following format:
 
+```
 [
 [[input1, input2, input3....], [expected1, expected2, expected3 ...]]
 [[input1, input2, input3....], [expected1, expected2, expected3 ...]]
 ]
+```
 
 ```ruby
 training_data = [
