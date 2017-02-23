@@ -2,7 +2,8 @@
 
 A Feedforward neural network toolkit for JRuby. Easily add machine learning features
 to your ruby application using this Gem. Though there are faster native C implementations
-available (e.g. FANN) we need something that is simple and just works.
+available (e.g. FANN) we need something that is simple, beginner friendly and just works.
+
 This java based implementation provides a balance of performance and ease of use.
 
 ## Installation
@@ -23,6 +24,12 @@ And then execute:
 Or install it yourself as:
 
     $ gem install brains
+
+## Features
+
+* Customizable network parameters depending on requirements
+* Fast (A bit slower than FANN but significantly faster than a pure ruby implementation)
+* NN backend Java which allows for platform agnostic implementation
 
 ## Usage
 
