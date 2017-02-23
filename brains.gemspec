@@ -9,16 +9,16 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Joseph Emmanuel Dayo"]
   spec.email         = ["joseph.dayo@gmail.com"]
 
-  spec.summary       = %q{A Feedforward neural net kit for JRuby}
-  spec.description   = %q{A Feedforward neural net kit for JRuby}
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.summary       = %q{A feedforward neural network library for JRuby}
+  spec.description   = %q{A feedforward neural network library for JRuby}
+  spec.homepage      = "https://github.com/jedld/brains-jruby"
   spec.license       = "MIT"
   spec.platform      = "java"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
   # to allow pushing to a single host or delete this section to allow pushing to any host.
   if spec.respond_to?(:metadata)
-    spec.metadata['allowed_push_host'] = "TODO: Set to 'http://mygemserver.com'"
+    spec.metadata['allowed_push_host'] = "https://rubygems.org"
   else
     raise "RubyGems 2.0 or newer is required to protect against public gem pushes."
   end
