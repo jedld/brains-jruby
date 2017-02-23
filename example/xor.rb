@@ -7,7 +7,7 @@ require 'brains'
 # Bias neurons are automatically added to input + hidden layers; no need to specify these
 # 5 = 4 in one hidden layer + 1 output neuron (input neurons not counted)
 
-nn = Brains::Net.create(2, 1, 5, { neurons_per_layer: 4 })
+nn = Brains::Net.create(2, 1, 1, { neurons_per_layer: 4 })
 nn.randomize_weights
 
 # A    B   A XOR B
@@ -37,7 +37,7 @@ results = test_data.collect { |item|
 
 p results
 
-result = nn.optimize(training_data, 0.01, 1_000 ) { |i, error|
+result = nn.optimize(training_data, 0.01, 1_000_000 ) { |i, error|
   puts "#{i} #{error}"
 }
 

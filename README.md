@@ -46,9 +46,8 @@ require 'brains'
 
 # Build a 3 layer network: 4 input neurons, 4 hidden neurons, 3 output neurons
 # Bias neurons are automatically added to input + hidden layers; no need to specify these
-# 5 = 4 in one hidden layer + 1 output neuron (input neurons not counted)
 
-nn = Brains::Net.create(2, 1, 5, { neurons_per_layer: 4 })
+nn = Brains::Net.create(2 /* no. of inputs */, 1 /*no. of outputs */, 1 /*hidden layer*/, { neurons_per_layer: 4 })
 nn.randomize_weights
 ```
 

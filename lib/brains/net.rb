@@ -4,13 +4,16 @@ module Brains
   class Net
     attr_accessor :nn, :config
 
-    def self.create(input, output, total, opts = {})
-      config = com.dayosoft.nn.NeuralNet::Config.new(input, output, total)
+    def self.create(input, output, total_hidden_layers = 1, opts = {})
+      neurons_per_layer = opts[:neurons_per_layer] || 5
+
+      config = com.dayosoft.nn.NeuralNet::Config.new(input, output,  total_hidden_layers * neurons_per_layer + output)
       config.bias = opts[:bias] || 1.0
       config.outputBias = opts[:output_bias] || 1.0
       config.learningRate = opts[:learning_rate] || 0.1
-      config.neuronsPerLayer = opts[:neurons_per_layer] || 5
+      config.neuronsPerLayer = neurons_per_layer
       config.momentumFactor = opts[:momentum_factor] || 0.5
+      config.backPropagationAlgorithm = opt_t_back_alg(opts[:train_method] || :standard)
       config.activationFunctionType = opt_to_func(opts[:activation_function] || :htan)
       config.outputActivationFunctionType = opt_to_func(opts[:activation_function] || :sigmoid)
       config.errorFormula = opt_to_error_func(opts[:activation_function] || :mean_squared)
@@ -38,7 +41,7 @@ module Brains
       @nn.dumpWeights.to_a.map(&:to_a)
     end
 
-    def optimize(test_cases, target_error = 0.01, max_epoch = 1_000_000_000, is_batch = false, &callback)
+    def optimize(test_cases, target_error = 0.01, max_epoch = 1_000_000_000, callback_interval = 1000, &callback)
       inputs = []
       outputs = []
 
@@ -47,7 +50,8 @@ module Brains
         outputs << item[1].to_java(Java::double)
       end
 
-      result = @nn.optimize(java.util.ArrayList.new(inputs), java.util.ArrayList.new(outputs), target_error, max_epoch, is_batch, callback)
+      result = @nn.optimize(java.util.ArrayList.new(inputs), java.util.ArrayList.new(outputs), target_error, max_epoch,
+        callback_interval, callback)
       { iterations: result.first, error: result.second }
     end
 
@@ -88,6 +92,15 @@ module Brains
         com.dayosoft.nn.Neuron::RECTIFIER
       else
         raise "invalid activation function #{func}"
+      end
+    end
+
+    def self.opt_t_back_alg(func)
+      case func
+      when :standard
+        com.dayosoft.nn.NeuralNet::Config::STANDARD_BACKPROPAGATION
+      when :rprop
+        com.dayosoft.nn.NeuralNet::Config::RPROP_BACKPROPAGATION
       end
     end
 
