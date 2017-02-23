@@ -2,17 +2,28 @@ require 'java'
 
 module Brains
   class Net
-    def initialize(input, output, total, opts = {})
-      @config = com.dayosoft.nn.NeuralNet::Config.new(input, output, total)
-      @config.bias = opts[:bias] || 1.0
-      @config.outputBias = opts[:output_bias] || 1.0
-      @config.learningRate = opts[:learning_rate] || 0.1
-      @config.neuronsPerLayer = opts[:neurons_per_layer] || 5
-      @config.momentumFactor = opts[:momentum_factor] || 0.5
-      @config.activationFunctionType = opt_to_func(opts[:activation_function] || :htan)
-      @config.outputActivationFunctionType = opt_to_func(opts[:activation_function] || :sigmoid)
-      @config.errorFormula = opt_to_error_func(opts[:activation_function] || :mean_squared)
-      @nn = com.dayosoft.nn.NeuralNet.new(@config);
+    attr_accessor :nn, :config
+
+    def self.create(input, output, total, opts = {})
+      config = com.dayosoft.nn.NeuralNet::Config.new(input, output, total)
+      config.bias = opts[:bias] || 1.0
+      config.outputBias = opts[:output_bias] || 1.0
+      config.learningRate = opts[:learning_rate] || 0.1
+      config.neuronsPerLayer = opts[:neurons_per_layer] || 5
+      config.momentumFactor = opts[:momentum_factor] || 0.5
+      config.activationFunctionType = opt_to_func(opts[:activation_function] || :htan)
+      config.outputActivationFunctionType = opt_to_func(opts[:activation_function] || :sigmoid)
+      config.errorFormula = opt_to_error_func(opts[:activation_function] || :mean_squared)
+      nn = com.dayosoft.nn.NeuralNet.new(config);
+
+      Brains::Net.new.set_nn(nn).set_config(config)
+    end
+
+    def self.load(json_string)
+      nn = com.dayosoft.nn.NeuralNet::loadStateFromJsonString(nil, json_string)
+      config = nn.getConfig
+
+      Brains::Net.new.set_nn(nn).set_config(config)
     end
 
     def randomize_weights(min = -1, max = 1)
@@ -41,16 +52,31 @@ module Brains
     end
 
     def feed(input)
-      @nn.feed(input.to_java(Java::double)).to_a
+      output = @nn.feed(input.to_java(Java::double)).to_a
     end
 
     def to_json
       @nn.saveStateToJson
     end
 
+    def set_nn(nn)
+      @nn = nn
+      self
+    end
+
+    def set_config(config)
+      @config = config
+      self
+    end
+
+    protected
+
+    def initialize
+    end
+
     private
 
-    def opt_to_func(func)
+    def self.opt_to_func(func)
       case func
       when :htan
         com.dayosoft.nn.Neuron::HTAN
@@ -65,7 +91,7 @@ module Brains
       end
     end
 
-    def opt_to_error_func(func)
+    def self.opt_to_error_func(func)
       case func
       when :mean_squared
         com.dayosoft.nn.NeuralNet::Config::MEAN_SQUARED

@@ -50,7 +50,7 @@ end
 
 # Build a 3 layer network: 4 input neurons, 4 hidden neurons, 3 output neurons
 # Bias neurons are automatically added to input + hidden layers; no need to specify these
-nn = Brains::Net.new(4, 3, 7, { neurons_per_layer: 4 })
+nn = Brains::Net.create(4, 3, 7, { neurons_per_layer: 4 })
 nn.randomize_weights
 
 prediction_success = -> (actual, ideal) {
