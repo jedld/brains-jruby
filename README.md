@@ -2,7 +2,8 @@
 
 A Feedforward neural network toolkit for JRuby. Easily add machine learning features
 to your ruby application using this Gem. Though there are faster native C implementations
-this java backend provides a balance of performance and ease of use.
+available (e.g. FANN) we need something that is simple and just works.
+This java based implementation provides a balance of performance and ease of use.
 
 ## Installation
 
@@ -133,6 +134,10 @@ You can then save it to a file. You can then load it back using load()
 
 ```ruby
   nn = Brains::Net.load(saved_state)
+
+
+  # use
+  nn.feed([0.9, 0.9])
 ```
 
 For other samples please take a look at the example folder.
