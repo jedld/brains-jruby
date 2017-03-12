@@ -41,7 +41,7 @@ results.each_with_index do |a, index|
   puts "#{test_input_sequence[index]} => #{a[0]}"
 end
 
-result = nn.optimize_recurrent(training_data, 0.001, 1_000_000, 10_000 ) { |i, error|
+result = nn.optimize_recurrent(training_data, 0.001, 100_000, 10_000 ) { |i, error|
   puts "#{i} #{error}"
 }
 
