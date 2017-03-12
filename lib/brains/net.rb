@@ -13,10 +13,11 @@ module Brains
       config.learningRate = opts[:learning_rate] || 0.1
       config.neuronsPerLayer = neurons_per_layer
       config.momentumFactor = opts[:momentum_factor] || 0.5
+      config.isRecurrent = opts[:recurrent] || false
       config.backPropagationAlgorithm = opt_t_back_alg(opts[:train_method] || :standard)
       config.activationFunctionType = opt_to_func(opts[:activation_function] || :htan)
-      config.outputActivationFunctionType = opt_to_func(opts[:activation_function] || :sigmoid)
-      config.errorFormula = opt_to_error_func(opts[:activation_function] || :mean_squared)
+      config.outputActivationFunctionType = opt_to_func(opts[:output_function] || :sigmoid)
+      config.errorFormula = opt_to_error_func(opts[:error] || :mean_squared)
       nn = com.dayosoft.nn.NeuralNet.new(config);
 
       Brains::Net.new.set_nn(nn).set_config(config)
@@ -55,8 +56,66 @@ module Brains
       { iterations: result.first, error: result.second }
     end
 
+    def optimize_recurrent(test_cases, target_error = 0.01, max_epoch = 1_000_000_000,
+        callback_interval = 1000, max_layers = 0, &callback)
+      inputs = []
+      outputs = []
+
+      input_set = java.util.ArrayList.new
+      output_set = java.util.ArrayList.new
+
+      test_cases.each do |item|
+
+        inputs = java.util.ArrayList.new
+        outputs = java.util.ArrayList.new
+
+        item[0].each do |item|
+          inputs.add(item.to_java(Java::double))
+        end
+
+        item[1].each do |item|
+          outputs.add(item.to_java(Java::double))
+        end
+
+        input_set.add(inputs)
+        output_set.add(outputs)
+      end
+
+      result = @nn.optimizeRecurrent(input_set, output_set, target_error, max_layers, max_epoch,
+        callback_interval, callback)
+
+      { iterations: result.first, error: result.second }
+    end
+
     def feed(input)
-      output = @nn.feed(input.to_java(Java::double)).to_a
+      # recurrent mode when array of array is passed.
+      if input && input.size > 0 && input[0].kind_of?(Array)
+        feed_recurrent(input)
+      else
+        @nn.feed(input.to_java(Java::double)).to_a
+        @nn.updatePreviousOutputs if config.isRecurrent
+      end
+    end
+
+    # For a recurrent network, this resets hidden states back to zero
+    def reset
+      if config.isRecurrent
+        @nn.resetRecurrentStates
+      else
+        puts "Warning not a recurrent network. This does nothing"
+      end
+    end
+
+    def feed_recurrent(inputs)
+      inputset = java.util.ArrayList.new
+      inputs.each do |input|
+        inputset.add(input.to_java(Java::double))
+      end
+
+      output_set = @nn.feed(inputset).to_a
+      output_set.collect do |output|
+        output.to_a
+      end
     end
 
     def to_json
@@ -101,6 +160,8 @@ module Brains
         com.dayosoft.nn.NeuralNet::Config::STANDARD_BACKPROPAGATION
       when :rprop
         com.dayosoft.nn.NeuralNet::Config::RPROP_BACKPROPAGATION
+      else
+        raise "Invalid backpropagation method #{func}"
       end
     end
 

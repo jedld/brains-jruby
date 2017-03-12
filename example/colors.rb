@@ -93,3 +93,5 @@ test_data.each_with_index { |item , index|
 }
 
 puts "#{correct}/#{test_data.length}"
+
+puts nn.to_json
