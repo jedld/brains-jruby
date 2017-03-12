@@ -92,8 +92,10 @@ module Brains
       if input && input.size > 0 && input[0].kind_of?(Array)
         feed_recurrent(input)
       else
-        @nn.feed(input.to_java(Java::double)).to_a
+        result = @nn.feed(input.to_java(Java::double)).to_a
         @nn.updatePreviousOutputs if config.isRecurrent
+
+        result
       end
     end
 

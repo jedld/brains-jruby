@@ -154,6 +154,12 @@ https://github.com/jedld/brains
 
 You can compile the java source code as brains.jar and use it directly with this gem.
 
+## RNNs (Recurrent Neural Networks)
+
+For recurrent neural networks (Look at the sine function in the examples). Only
+the backpropagation through time (BPTT) training algorithm is
+supported for now.
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.

@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["joseph.dayo@gmail.com"]
 
   spec.summary       = %q{A feedforward neural network library for JRuby}
-  spec.description   = %q{A feedforward neural network library for JRuby}
+  spec.description   = %q{A feedforward neural network library for JRuby. Aims to provide a quick way to get started on machine learning with ruby }
   spec.homepage      = "https://github.com/jedld/brains-jruby"
   spec.license       = "MIT"
   spec.platform      = "java"
