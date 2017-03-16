@@ -52,7 +52,10 @@ training_data = [
   [color_value('4C516D'), BLUE],
 ]
 
-nn = Brains::Net.create(3, 3, 2, { neurons_per_layer: 5 })
+nn = Brains::Net.create(3, 3, 1, {
+    neurons_per_layer: 3,
+    output_function: :softmax,
+    error: :cross_entropy })
 
 # randomize weights before training
 nn.randomize_weights
@@ -77,7 +80,7 @@ test_data.each_with_index { |item , index|
 
 puts "#{correct}/#{test_data.length}"
 
-result = nn.optimize(training_data, 0.005, 1_000_000, 100 ) { |i, error|
+result = nn.optimize(training_data, 0.25, 100_000, 100 ) { |i, error|
   puts "#{i} #{error}"
 }
 
@@ -87,9 +90,10 @@ puts "after training"
 
 correct = 0
 test_data.each_with_index { |item , index|
-  c = color_desc(nn.feed(item[0]))
+  r = nn.feed(item[0])
+  c = color_desc(r)
   correct +=1 if (c == item[1])
-  puts c
+  puts "#{r} -> #{c}"
 }
 
 puts "#{correct}/#{test_data.length}"
