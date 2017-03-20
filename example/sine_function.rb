@@ -24,6 +24,7 @@ testing_data = generate_sine_test_data(11, 20)
 
 # input sequence
 input_sequence = training_data[0][0].map { |a| a[0] }
+output_sequence = training_data[0][1].map { |a| a[0] }
 test_input_sequence = testing_data[0][0].map { |a| a[0] }
 test_output_sequence = testing_data[0][1].map { |a| a[0] }
 
@@ -41,11 +42,18 @@ results.each_with_index do |a, index|
   puts "#{test_input_sequence[index]} => #{a[0]}"
 end
 
-result = nn.optimize_recurrent(training_data, 0.001, 100_000, 10_000 ) { |i, error|
+result = nn.optimize_recurrent(training_data, 0.001, 100_000_000, 10_000 ) { |i, error|
   puts "#{i} #{error}"
 }
 
+results = nn.feed(training_data[0][0])
+puts " Training data"
+results.each_with_index do |a, index|
+  puts "#{input_sequence[index]} => #{a[0]} (#{output_sequence[index]})"
+end
+puts " Testing data"
 results = nn.feed(testing_data[0][0])
+
 results.each_with_index do |a, index|
   puts "#{test_input_sequence[index]} => #{a[0]} (#{test_output_sequence[index]})"
 end
